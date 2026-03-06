@@ -2,19 +2,27 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { ArrowLeft, ArrowRight, Eye, EyeOff, HelpCircle } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Eye, EyeOff, HelpCircle, ShieldAlert, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
-  const [name, setName] = useState('Yasir Ekinci'); // Prefilled as shown in your design
+  const router = useRouter();
+
+  const [name, setName] = useState('Yasir Ekinci'); 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  
+  // State to track the selected role
+  const [role, setRole] = useState<'super_admin' | 'admin'>('admin');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log({ name, email, password });
-    // Add your login/signup logic here
+    console.log({ name, email, password, role });
+    
+    // Sends the user to the map dashboard page after clicking Start Creating
+    router.push('/dashboard'); 
   };
 
   return (
@@ -123,6 +131,36 @@ export default function LoginPage() {
                 <ArrowRight size={16} />
               </div>
             </button>
+
+            {/* Role Selection Buttons (Added Below Start Creating) */}
+            <div className="grid grid-cols-2 gap-4 pt-2">
+              <button
+                type="button"
+                onClick={() => setRole('super_admin')}
+                className={`py-3 px-4 rounded-2xl border flex items-center justify-center gap-2 transition-all duration-200 ${
+                  role === 'super_admin'
+                    ? 'bg-white/10 border-elago-accent text-white shadow-[0_0_10px_rgba(46,204,154,0.1)]'
+                    : 'bg-transparent border-white/10 text-white/40 hover:bg-white/5 hover:text-white/70'
+                }`}
+              >
+                <ShieldAlert size={16} className={role === 'super_admin' ? 'text-elago-accent' : ''} />
+                <span className="text-sm font-medium">Super Admin</span>
+              </button>
+              
+              <button
+                type="button"
+                onClick={() => setRole('admin')}
+                className={`py-3 px-4 rounded-2xl border flex items-center justify-center gap-2 transition-all duration-200 ${
+                  role === 'admin'
+                    ? 'bg-white/10 border-elago-accent text-white shadow-[0_0_10px_rgba(46,204,154,0.1)]'
+                    : 'bg-transparent border-white/10 text-white/40 hover:bg-white/5 hover:text-white/70'
+                }`}
+              >
+                <ShieldCheck size={16} className={role === 'admin' ? 'text-elago-accent' : ''} />
+                <span className="text-sm font-medium">Admin</span>
+              </button>
+            </div>
+
           </form>
 
           {/* Footer Terms */}
